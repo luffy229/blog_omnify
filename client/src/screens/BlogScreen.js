@@ -5,6 +5,7 @@ import axios from 'axios';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { AuthContext } from '../context/AuthContext';
+import getApiUrl from '../utils/apiConfig';
 
 const BlogScreen = () => {
   const { id } = useParams();
@@ -30,7 +31,7 @@ const BlogScreen = () => {
     const fetchBlog = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(`http://localhost:5000/api/blogs/${id}`);
+        const { data } = await axios.get(getApiUrl(`blogs/${id}`));
         setBlog(data);
         setLikesCount(data.likes.length);
         
@@ -65,7 +66,7 @@ const BlogScreen = () => {
       };
 
       const { data } = await axios.get(
-        `http://localhost:5000/api/blogs/${id}/like/check`,
+        getApiUrl(`blogs/${id}/like/check`),
         config
       );
       
@@ -91,7 +92,7 @@ const BlogScreen = () => {
           },
         };
 
-        await axios.delete(`http://localhost:5000/api/blogs/${id}`, config);
+        await axios.delete(getApiUrl(`blogs/${id}`), config);
         navigate('/');
       } catch (error) {
         setError(
@@ -117,7 +118,7 @@ const BlogScreen = () => {
       };
 
       const { data } = await axios.post(
-        `http://localhost:5000/api/blogs/${id}/like`,
+        getApiUrl(`blogs/${id}/like`),
         {},
         config
       );
@@ -153,7 +154,7 @@ const BlogScreen = () => {
       };
 
       const { data } = await axios.post(
-        `http://localhost:5000/api/blogs/${id}/comments`,
+        getApiUrl(`blogs/${id}/comments`),
         { text: comment },
         config
       );
@@ -191,7 +192,7 @@ const BlogScreen = () => {
         };
 
         const { data } = await axios.delete(
-          `http://localhost:5000/api/blogs/${id}/comments/${commentId}`,
+          getApiUrl(`blogs/${id}/comments/${commentId}`),
           config
         );
         
@@ -249,7 +250,7 @@ const BlogScreen = () => {
       };
 
       const { data } = await axios.post(
-        `http://localhost:5000/api/blogs/${id}/comments/${commentId}/replies`,
+        getApiUrl(`blogs/${id}/comments/${commentId}/replies`),
         { text: replyText },
         config
       );
@@ -284,7 +285,7 @@ const BlogScreen = () => {
         };
 
         const { data } = await axios.delete(
-          `http://localhost:5000/api/blogs/${id}/comments/${commentId}/replies/${replyId}`,
+          getApiUrl(`blogs/${id}/comments/${commentId}/replies/${replyId}`),
           config
         );
         

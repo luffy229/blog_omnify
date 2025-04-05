@@ -31,24 +31,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/notifications', notificationRoutes);
 
-// Serve static assets if in production
-if (process.env.NODE_ENV === 'production') {
-  // Set static folder - adjust path for Vercel deployment
-  const clientBuildPath = path.join(__dirname, '../client/build');
-  
-  app.use(express.static(clientBuildPath));
-  
-  // Any routes not caught by the API will be redirected to the index.html
-  app.get('*', (req, res) => {
-    res.sendFile(path.resolve(clientBuildPath, 'index.html'));
-  });
-}
-
-// Basic route for testing API
-app.get('/api', (req, res) => {
-  res.json({ message: 'API is running' });
-});
-
 // Error handler middleware
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;

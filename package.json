@@ -8,7 +8,7 @@
     "server": "nodemon server/server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "npm install && cd client && npm install && npm run build",
+    "build": "cd client && npm install && npm run build",
     "vercel-build": "npm run build"
   },
   "keywords": [
