@@ -21,6 +21,11 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Basic route for testing API
+app.get('/api', (req, res) => {
+  res.json({ message: 'API is running' });
+});
+
 // Add a test route to check if the API is working
 app.get('/api/test', (req, res) => {
   res.json({ message: 'API is working' });
@@ -30,6 +35,17 @@ app.get('/api/test', (req, res) => {
 app.use('/api/users', userRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/notifications', notificationRoutes);
+
+// For Vercel serverless - catch all requests
+app.all('*', (req, res) => {
+  // Only respond to API requests, all other requests should be handled by the frontend
+  if (req.url.startsWith('/api')) {
+    res.status(404).json({ message: 'API endpoint not found' });
+  } else {
+    // For non-API requests, let the frontend handle routing
+    res.status(200).send('Frontend should handle this route');
+  }
+});
 
 // Error handler middleware
 app.use((err, req, res, next) => {
