@@ -1,102 +1,83 @@
-# MERN Blog Application
+# Blog Application
 
-A full-stack blog application built with the MERN stack (MongoDB, Express, React, Node.js). This application allows users to create, read, update, and delete blog posts, as well as interact with posts through likes and comments.
+A full-stack MERN (MongoDB, Express, React, Node.js) blog application with features like user authentication, blog creation/editing, comments, likes, and notifications.
 
 ## Features
 
-- **User Authentication**: Register, login, and logout functionality
-- **Blog Management**: Create, read, update, and delete blog posts
-- **Interactive Features**:
-  - Like/unlike blog posts
-  - Comment on blog posts
-  - Delete your own comments
-  - View count tracking
-  - Automatic reading time calculation
-- **Search & Filter**: Search blogs by title, content, or author
-- **Responsive Design**: Mobile-friendly interface
+- User authentication (register, login, update profile)
+- Create, edit, and delete blog posts
+- Comment on blogs with nested replies
+- Like blogs
+- Real-time notifications
+- User blog management
+- Responsive design
 
 ## Tech Stack
 
-### Frontend
-- React.js
-- React Bootstrap for UI components
-- React Router for navigation
-- Context API for state management
-- Axios for API requests
-- Font Awesome for icons
+- **Frontend**: React, React Bootstrap, React Router
+- **Backend**: Node.js, Express
+- **Database**: MongoDB
+- **Authentication**: JWT (JSON Web Tokens)
+- **Deployment**: Vercel
 
-### Backend
-- Node.js with Express.js
-- MongoDB with Mongoose for data modeling
-- JWT for authentication
-- bcrypt for password hashing
-
-## Getting Started
+## Deployment Instructions
 
 ### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB (local or Atlas)
 
-### Installation
+- MongoDB Atlas account
+- Vercel account
+- GitHub account
+
+### Steps to Deploy
+
+1. **Environment Variables**:
+   - Set up the following environment variables in Vercel:
+     - `MONGODB_URI`: Your MongoDB connection string
+     - `JWT_SECRET`: A secret key for JWT authentication
+     - `PORT`: Will be automatically set by Vercel
+
+2. **Deployment**:
+   - Connect your GitHub repository to Vercel
+   - Set the root directory as the project root
+   - Configure the build settings:
+     - Build Command: `npm run build`
+     - Output Directory: `client/build`
+   - Add the environment variables
+   - Deploy!
+
+## Local Development
 
 1. Clone the repository
-```bash
-git clone <repository-url>
-cd blog-app
-```
+2. Install dependencies:
+   ```
+   npm install
+   cd client && npm install
+   ```
+3. Create a `.env` file in the server directory with:
+   ```
+   MONGODB_URI=your_mongodb_uri
+   JWT_SECRET=your_secret_key
+   PORT=5000
+   ```
+4. Start the development server:
+   ```
+   npm run dev
+   ```
 
-2. Install backend dependencies
-```bash
-cd server
-npm install
-```
+## Project Structure
 
-3. Install frontend dependencies
-```bash
-cd ../client
-npm install
-```
+- `/client` - React frontend
+- `/server` - Express backend
+  - `/controllers` - Request handlers
+  - `/middleware` - Custom middleware
+  - `/models` - Mongoose models
+  - `/routes` - API routes
 
-4. Create a .env file in the server directory with the following variables
-```
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret
-PORT=5000
-```
+## API Routes
 
-### Running the Application
-
-1. Start the backend server
-```bash
-cd server
-npm run dev
-```
-
-2. Start the frontend development server
-```bash
-cd client
-npm start
-```
-
-3. Open your browser and navigate to `http://localhost:3000`
-
-## API Endpoints
-
-### Authentication
-- `POST /api/users/register` - Register a new user
-- `POST /api/users/login` - Login a user
-- `GET /api/users/profile` - Get user profile
-
-### Blogs
-- `GET /api/blogs` - Get all blogs
-- `POST /api/blogs` - Create a new blog
-- `GET /api/blogs/:id` - Get a specific blog
-- `PUT /api/blogs/:id` - Update a blog
-- `DELETE /api/blogs/:id` - Delete a blog
-- `POST /api/blogs/:id/like` - Like/unlike a blog
-- `GET /api/blogs/:id/like/check` - Check if user has liked a blog
-- `POST /api/blogs/:id/comments` - Add a comment to a blog
-- `DELETE /api/blogs/:id/comments/:commentId` - Delete a comment
+- **Auth**: `/api/users` - Register, login, profile
+- **Blogs**: `/api/blogs` - CRUD operations
+- **Notifications**: `/api/notifications` - User notifications
 
 ## Screenshots
 
