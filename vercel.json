@@ -19,11 +19,8 @@
       "dest": "server/server.js"
     },
     {
-      "handle": "filesystem"
-    },
-    {
       "src": "/(.*)",
-      "dest": "/client/build/index.html"
+      "dest": "client/build/$1"
     }
   ]
 } 

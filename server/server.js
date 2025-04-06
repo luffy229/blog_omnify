@@ -21,31 +21,28 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Basic route for testing API
-app.get('/api', (req, res) => {
-  res.json({ message: 'API is running' });
-});
-
-// Add a test route to check if the API is working
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'API is working' });
-});
-
 // Routes
 app.use('/api/users', userRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/notifications', notificationRoutes);
 
-// For Vercel serverless - catch all requests
-app.all('*', (req, res) => {
-  // Only respond to API requests, all other requests should be handled by the frontend
-  if (req.url.startsWith('/api')) {
-    res.status(404).json({ message: 'API endpoint not found' });
-  } else {
-    // For non-API requests, let the frontend handle routing
-    res.status(200).send('Frontend should handle this route');
-  }
-});
+// Serve static assets if in production
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder
+  const clientBuildPath = path.join(__dirname, '../client/build');
+  
+  app.use(express.static(clientBuildPath));
+  
+  // Any routes not caught by the API will be redirected to the index.html
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(clientBuildPath, 'index.html'));
+  });
+} else {
+  // Basic route for development
+  app.get('/', (req, res) => {
+    res.send('API is running');
+  });
+}
 
 // Error handler middleware
 app.use((err, req, res, next) => {
@@ -59,7 +56,7 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-// For local development server
+// For Vercel serverless functions
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

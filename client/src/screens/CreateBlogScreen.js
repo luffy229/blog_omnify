@@ -5,7 +5,6 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import getApiUrl from '../utils/apiConfig';
 
 const CreateBlogScreen = () => {
   const { id } = useParams();
@@ -34,7 +33,7 @@ const CreateBlogScreen = () => {
       const fetchBlog = async () => {
         try {
           setLoadingBlog(true);
-          const { data } = await axios.get(getApiUrl(`blogs/${id}`));
+          const { data } = await axios.get(`http://localhost:5000/api/blogs/${id}`);
           
           // Check if this user is the author
           if (data.author && data.author._id !== user._id) {
@@ -100,7 +99,7 @@ const CreateBlogScreen = () => {
       if (isEditMode) {
         // Update blog
         await axios.put(
-          getApiUrl(`blogs/${id}`),
+          `http://localhost:5000/api/blogs/${id}`,
           { title, content },
           config
         );
@@ -109,7 +108,7 @@ const CreateBlogScreen = () => {
       } else {
         // Create new blog
         const { data } = await axios.post(
-          getApiUrl('blogs'),
+          'http://localhost:5000/api/blogs',
           { title, content },
           config
         );

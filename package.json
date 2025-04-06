@@ -8,7 +8,7 @@
     "server": "nodemon server/server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "cd client && npm install && CI=false npm run build",
+    "build": "npm install && cd client && npm install && CI=false npm run build",
     "vercel-build": "npm run build"
   },
   "keywords": [
@@ -21,9 +21,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "concurrently": "^8.0.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "concurrently": "^8.0.1"
   }
 } 
