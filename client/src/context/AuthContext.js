@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const AuthContext = createContext();
 
-// Create base URL for API calls - ensure it works in both dev and production
+// Create base URL for API calls
 const API_URL = process.env.REACT_APP_API_URL || '/api';
 
 export const AuthProvider = ({ children }) => {
