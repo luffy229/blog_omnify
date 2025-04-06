@@ -2,14 +2,15 @@
   "name": "blog-app",
   "version": "1.0.0",
   "description": "MERN stack blog application",
-  "main": "index.js",
+  "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
     "server": "nodemon server/server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "prebuild": "cd client && npm install && npm run build",
     "build": "cd client && npm install && npm run build",
-    "vercel-build": "npm run build"
+    "vercel-build": "node vercel.build.js"
   },
   "keywords": [
     "blog",
@@ -28,5 +29,8 @@
     "mongoose": "^7.0.3",
     "jsonwebtoken": "^9.0.0",
     "bcryptjs": "^2.4.3"
+  },
+  "engines": {
+    "node": "16.x"
   }
 } 
