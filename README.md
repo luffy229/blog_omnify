@@ -98,42 +98,6 @@ npm start
 - `POST /api/blogs/:id/comments` - Add a comment to a blog
 - `DELETE /api/blogs/:id/comments/:commentId` - Delete a comment
 
-## Deployment to Vercel
-
-### Prerequisites
-- A [Vercel](https://vercel.com) account
-- Your project pushed to GitHub
-
-### Deployment Steps
-
-1. **Connect Vercel to GitHub**
-   - Sign in to Vercel and click "Import Project"
-   - Select "Import Git Repository" and choose your GitHub repo
-
-2. **Configure Project Settings**
-   - Project Name: Choose a name for your deployment
-   - Framework Preset: Select "Other"
-   - Build Command: Leave empty (configured in vercel.json)
-   - Output Directory: Leave empty (configured in vercel.json)
-   - Install Command: `npm install`
-
-3. **Set Environment Variables**
-   - Add the following environment variables in the Vercel dashboard:
-     - `MONGODB_URI`: Your MongoDB connection string
-     - `JWT_SECRET`: Your JWT secret key for authentication
-     - `NODE_ENV`: Set to `production`
-
-4. **Deploy**
-   - Click "Deploy" and wait for the build to complete
-   - Vercel will automatically deploy both your frontend and backend
-
-5. **Access Your Deployed Application**
-   - Once deployed, Vercel will provide a URL for your application
-   - Visit the URL to access your live blog application
-
-### Updating Your Deployment
-- Vercel will automatically redeploy your application whenever you push changes to your GitHub repository
-
 ## Screenshots
 
 _Add screenshots of your application here_

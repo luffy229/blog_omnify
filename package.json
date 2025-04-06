@@ -8,9 +8,8 @@
     "server": "nodemon server/server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "prebuild": "cd client && npm install && npm run build",
-    "build": "cd client && npm install && npm run build",
-    "vercel-build": "node vercel.build.js"
+    "build": "npm install && cd client && npm install && npm run build",
+    "vercel-build": "npm run build"
   },
   "keywords": [
     "blog",
@@ -22,15 +21,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "concurrently": "^8.0.1",
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3",
-    "mongoose": "^7.0.3",
-    "jsonwebtoken": "^9.0.0",
-    "bcryptjs": "^2.4.3"
-  },
-  "engines": {
-    "node": "18.x"
+    "concurrently": "^8.0.1"
   }
 } 

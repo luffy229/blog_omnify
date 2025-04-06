@@ -1,8 +1,8 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
-const dotenv = require('dotenv');
+const connectDB = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
@@ -10,65 +10,58 @@ const notificationRoutes = require('./routes/notificationRoutes');
 // Load environment variables
 dotenv.config();
 
-// Create Express app
+// Connect to MongoDB
+connectDB();
+
 const app = express();
 
 // Middleware
 app.use(cors());
+// Increase JSON payload limit to handle larger images
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.error(`MongoDB Connection Error: ${err.message}`));
-
-// API Routes
+// Routes
 app.use('/api/users', userRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/notifications', notificationRoutes);
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok', message: 'API is working' });
-});
-
-// Root API endpoint
-app.get('/api', (req, res) => {
-  res.status(200).json({ message: 'Blog API is running' });
-});
-
-// Serve static assets in production
+// Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
-  app.use(express.static('client/build'));
-
-  // For any route that is not an API route, serve the index.html
+  const clientBuildPath = path.join(__dirname, '../client/build');
+  
+  app.use(express.static(clientBuildPath));
+  
+  // Any routes not caught by the API will be redirected to the index.html
   app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api/')) {
-      res.sendFile(path.resolve(__dirname, '../client/build/index.html'));
-    }
+    res.sendFile(path.resolve(clientBuildPath, 'index.html'));
+  });
+} else {
+  // Basic route for development
+  app.get('/', (req, res) => {
+    res.send('API is running');
   });
 }
 
-// Error handling middleware
+// Error handler middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
+  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  res.status(statusCode);
+  res.json({
     message: err.message,
-    stack: process.env.NODE_ENV === 'production' ? null : err.stack
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack,
   });
 });
 
-// Set port
 const PORT = process.env.PORT || 5000;
 
-// Start server in development mode
+// For Vercel serverless functions
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
 }
 
-// Export for Vercel
+// For Vercel serverless deployment
 module.exports = app; 
