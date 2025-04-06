@@ -1,10 +1,11 @@
-// Special file for Vercel serverless functions
-// Make sure path is correct and module exists
+// Vercel serverless API entry point
 const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const connectDB = require('../server/config/db');
+const mongoose = require('mongoose');
+
+// Import routes directly to avoid path resolution issues
 const userRoutes = require('../server/routes/userRoutes');
 const blogRoutes = require('../server/routes/blogRoutes');
 const notificationRoutes = require('../server/routes/notificationRoutes');
@@ -13,7 +14,9 @@ const notificationRoutes = require('../server/routes/notificationRoutes');
 dotenv.config();
 
 // Connect to MongoDB
-connectDB();
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error(`MongoDB Connection Error: ${err.message}`));
 
 const app = express();
 
@@ -23,10 +26,20 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Routes
+// API Routes
 app.use('/api/users', userRoutes);
 app.use('/api/blogs', blogRoutes);
 app.use('/api/notifications', notificationRoutes);
+
+// Health check route for debugging
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'API is running' });
+});
+
+// Basic fallback route for verification
+app.get('/api', (req, res) => {
+  res.status(200).json({ message: 'Blog API is running' });
+});
 
 // Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
@@ -43,13 +56,13 @@ if (process.env.NODE_ENV === 'production') {
 
 // Error handler middleware
 app.use((err, req, res, next) => {
+  console.error(err.stack);
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  res.status(statusCode);
-  res.json({
+  res.status(statusCode).json({
     message: err.message,
     stack: process.env.NODE_ENV === 'production' ? null : err.stack,
   });
 });
 
-// For Vercel serverless deployment
+// Export for Vercel
 module.exports = app; 
