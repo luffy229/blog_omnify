@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
+import axios from 'axios';
 import BlogCard from '../components/BlogCard';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import { Link } from 'react-router-dom';
-import api from '../utils/api';
+
+// Create base URL for API calls
+const API_URL = process.env.REACT_APP_API_URL || '/api';
 
 const HomeScreen = () => {
   const [blogs, setBlogs] = useState([]);
@@ -23,7 +26,7 @@ const HomeScreen = () => {
     const fetchBlogs = async () => {
       try {
         setLoading(true);
-        const { data } = await api.get(`/blogs?page=1&limit=${BLOGS_PER_PAGE}`);
+        const { data } = await axios.get(`${API_URL}/blogs?page=1&limit=${BLOGS_PER_PAGE}`);
         
         // Handle the response based on its structure
         const blogsArray = data.blogs || data;
@@ -51,8 +54,8 @@ const HomeScreen = () => {
       setLoadingMore(true);
       const nextPage = page + 1;
       
-      const { data } = await api.get(
-        `/blogs?page=${nextPage}&limit=${BLOGS_PER_PAGE}`
+      const { data } = await axios.get(
+        `${API_URL}/blogs?page=${nextPage}&limit=${BLOGS_PER_PAGE}`
       );
       
       const newBlogs = data.blogs || data;

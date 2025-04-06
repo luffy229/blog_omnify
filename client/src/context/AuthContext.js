@@ -1,7 +1,10 @@
 import React, { createContext, useState, useEffect } from 'react';
-import api from '../utils/api';
+import axios from 'axios';
 
 export const AuthContext = createContext();
+
+// Create base URL for API calls
+const API_URL = process.env.REACT_APP_API_URL || '/api';
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
@@ -18,9 +21,16 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const { data } = await api.post(
-        '/users/login',
-        { email, password }
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const { data } = await axios.post(
+        `${API_URL}/users/login`,
+        { email, password },
+        config
       );
 
       setUser(data);
@@ -38,9 +48,16 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      const { data } = await api.post(
-        '/users',
-        { name, email, password }
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      const { data } = await axios.post(
+        `${API_URL}/users`,
+        { name, email, password },
+        config
       );
 
       setUser(data);
@@ -58,9 +75,17 @@ export const AuthProvider = ({ children }) => {
 
   const updateProfile = async (userData) => {
     try {
-      const { data } = await api.put(
-        '/users/profile',
-        userData
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const { data } = await axios.put(
+        `${API_URL}/users/profile`,
+        userData,
+        config
       );
 
       setUser(data);

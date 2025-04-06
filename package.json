@@ -9,7 +9,7 @@
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "npm install && cd client && npm install && npm run build",
-    "vercel-build": "NODE_ENV=production npm run build"
+    "vercel-build": "npm run build"
   },
   "keywords": [
     "blog",

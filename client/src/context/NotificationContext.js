@@ -1,8 +1,11 @@
 import React, { createContext, useState, useEffect, useContext, useCallback } from 'react';
+import axios from 'axios';
 import { AuthContext } from './AuthContext';
-import api from '../utils/api';
 
 export const NotificationContext = createContext();
+
+// Create base URL for API calls
+const API_URL = process.env.REACT_APP_API_URL || '/api';
 
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
@@ -19,8 +22,17 @@ export const NotificationProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-            
-      const { data } = await api.get('/notifications');
+      
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      
+      const { data } = await axios.get(
+        `${API_URL}/notifications`,
+        config
+      );
       
       setNotifications(data);
       setLoading(false);
@@ -38,8 +50,17 @@ export const NotificationProvider = ({ children }) => {
   const fetchUnreadCount = useCallback(async () => {
     if (!user) return;
     
-    try {      
-      const { data } = await api.get('/notifications/unread');
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      
+      const { data } = await axios.get(
+        `${API_URL}/notifications/unread`,
+        config
+      );
       
       setUnreadCount(data.count);
     } catch (error) {
@@ -69,8 +90,18 @@ export const NotificationProvider = ({ children }) => {
   const markAsRead = async (notificationId) => {
     if (!user) return;
     
-    try {      
-      await api.put(`/notifications/${notificationId}/read`, {});
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      
+      await axios.put(
+        `${API_URL}/notifications/${notificationId}/read`,
+        {},
+        config
+      );
       
       // Update local state
       setNotifications(
@@ -92,8 +123,18 @@ export const NotificationProvider = ({ children }) => {
   const markAllAsRead = async () => {
     if (!user) return;
     
-    try {     
-      await api.put('/notifications', {});
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      
+      await axios.put(
+        `${API_URL}/notifications`,
+        {},
+        config
+      );
       
       // Update local state
       setNotifications(
@@ -114,8 +155,17 @@ export const NotificationProvider = ({ children }) => {
   const deleteNotification = async (notificationId) => {
     if (!user) return;
     
-    try {      
-      await api.delete(`/notifications/${notificationId}`);
+    try {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      
+      await axios.delete(
+        `${API_URL}/notifications/${notificationId}`,
+        config
+      );
       
       // Update local state
       const updatedNotifications = notifications.filter(

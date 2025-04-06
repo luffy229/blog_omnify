@@ -29,11 +29,13 @@ app.use('/api/notifications', notificationRoutes);
 // Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {
   // Set static folder
-  app.use(express.static(path.join(__dirname, '../client/build')));
+  const clientBuildPath = path.join(__dirname, '../client/build');
+  
+  app.use(express.static(clientBuildPath));
   
   // Any routes not caught by the API will be redirected to the index.html
   app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+    res.sendFile(path.resolve(clientBuildPath, 'index.html'));
   });
 } else {
   // Basic route for development
@@ -54,8 +56,8 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 
-// For non-Vercel environments
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+// For Vercel serverless functions
+if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
